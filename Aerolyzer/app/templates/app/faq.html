@@ -1,0 +1,59 @@
+{% extends "app\base.html" %}
+{% load static %}
+{% block content %}
+<header>
+	<div class="container" style="height: 375px;>
+		<div class="row">
+			<div class="header-content">
+                <div class="header-content-inner" >
+					<h1>Frequently asked questions</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+    <section id="download" class="download bg-primary text-center" style="background: white; padding: 30px 30px 30px;">
+        <div class="container" style="color: black; text-align: left;">
+			<h3>Do I need an account to use Aerolyzer?</h3>
+				<p>
+					Yes. <a href="#signuphere">Sign up</a> or <a class="page-scroll" href="#page-top">log in</a>!
+				</p>
+			<h3>What are the restrictions for uploading images?</h3>
+				<p>
+					An image uploaded to Aerolyzer...
+					<ul>
+						<li>must be a mobile image.</li>
+						<li>cannot have been edited or filtered.</li>
+						<li>must be a picture of a direct landscape with the sky in view.</li>
+						<li>must be no llarger than 200kB.</li>
+						<li>must be of type .jpg or .png.</li>
+						<li>must exceed the minimum resolution.</li>
+						<li>must have been taken when camera location services were enabled.</li>
+						<li>must have been taken on a supported device.</li>
+					</ul>
+				</p>
+			<h3>What devices are supported?</h3>
+				<ul>
+					<li>iPhone 5S</li>
+					<li>iPhone 6S</li> 
+					<li>iPads</li> 
+					<li>Motorola DROID X</li>
+					<li>Samsung Galaxy S3 Mini</li>
+					<li>Samsung Galaxy S7 Edge</li>
+				</ul>
+			<h3>What is aerosol?</h3>
+				<p>
+					Aerosols are minute particles suspended in the atmosphere. When these particles are sufficiently large, we notice their presence as they scatter and absorb sunlight. Their scattering of sunlight can reduce visibility (haze) and redden sunrises and sunsets.
+					<br> <br>
+					Aerosols interact both directly and indirectly with the Earth's radiation budget and climate. As a direct effect, the aerosols scatter sunlight directly back into space. As an indirect effect, aerosols in the lower atmosphere can modify the size of cloud particles, changing how the clouds reflect and absorb sunlight, thereby affecting the Earth's energy budget.
+					<br> <br>
+					Aerosols also can act as sites for chemical reactions to take place (heterogeneous chemistry). The most significant of these reactions are those that lead to the destruction of stratospheric ozone. 
+					<br> <br>
+					<a href="https://www.nasa.gov/centers/langley/news/factsheets/Aerosols.html">
+						Learn more about aerosols here.
+					</a>
+				</p>
+        </div>
+    </section>
+</header>
+{% endblock %}
