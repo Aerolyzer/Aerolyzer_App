@@ -69,10 +69,6 @@ TEMPLATES = [
     },
 ]
 
-TEMPLATE_DIRS=(
-  os.getcwd() + '/app/templates',
-)
-
 WSGI_APPLICATION = 'Aerolyzer.wsgi.application'
 
 
@@ -115,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC-8'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
