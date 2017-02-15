@@ -61,19 +61,41 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-				<!-- TODO add check for if logged in, if so show username & ddown w profile/upload/gallery/logout-->
+				{% if not user.is_authenticated %}
                     <li>
-                         <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
-                            <div class="form-group">
-                                <label class="sr-only" for="exampleInputEmail2">Email address</label>
+                        <div class="form-group">
+							<form class="form" style="display: inline-block;" method="post" action="../app/login" id="login-nav">
+                                <label class="sr-only" for="inputEmail">Email address</label>
                                 <input type="email" class="navbar-form form-control-static" id="inputEmail" placeholder="Email address" required>
-                                <label class="sr-only" for="exampleInputPassword2">Password</label>
+                                <label class="sr-only" for="inputPassword">Password</label>
                                 <input type="password" class="navbar-form form-control-static" id="inputEmail" placeholder="Password" required>
                                 <button type="submit" class="btn btn-outline btn-group-lg  page-scroll">Log in</button>
+							</form>
+							<form class="form" style="display: inline-block;" action="../app/signup">
                                 <button class="btn btn-outline btn-group-lg  page-scroll">Sign up</button>
-                            </div>
-                        </form>
+							</form>
+                        </div>
                     </li>
+				{% endif %} 
+				{% if user.is_authenticated %}
+					<div class="dropdown" style="position: relative; display: inline-block;">
+						<button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+						<!-- <h4> {{ user.get_username }} </h4> -->
+						<h4>Username</h4>
+						</button>
+						<div class="dropdown-menu" style="position: absolute; color: black; padding: 10px;">
+							<h4>
+								<a class="dropdown-item" style="color: black;" href="#">Upload</a>
+								<br> <br>
+								<a class="dropdown-item" style="color: black;" href="#">Gallery</a>
+								<br> <br>
+								<a class="dropdown-item" style="color: black;" href="#">Profile</a>
+								<br> <br>
+								<a class="dropdown-item" style="color: black;" href="#">Logout</a>
+							</h4>
+						</div>
+					</div>
+				{% endif %}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
