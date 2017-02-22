@@ -9,4 +9,5 @@ urlpatterns = [
 	# Signup URLs
     url(r'^signup$', views.signup, name='signup'),
     url(r'^signup_complete$', views.signup_complete, name='signup_complete'),
+
 ]
