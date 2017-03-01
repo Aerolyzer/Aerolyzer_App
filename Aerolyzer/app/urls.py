@@ -12,4 +12,5 @@ urlpatterns = [
 	url(r'^gallery$', views.gallery, name='gallery'),
 	url(r'^profile$', views.profile, name='profile'),
 	url(r'^upload$', views.upload, name='upload'),
+    url(r'^logout/$', views.logout, name='logout'),
 ]

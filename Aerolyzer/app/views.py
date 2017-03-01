@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 	
 def index(request):
-	return render(request, 'app/index.html')
+	return render(request, 'app/index.html', { 'user': request.user },)
 	
 def about(request):
 	return render(request, 'app/about.html')
@@ -28,10 +28,7 @@ def signup(request):
             password=form.cleaned_data['password1'],
             email=form.cleaned_data['email']
             )
-            return render(request,
-            'app/signup_complete.html',
-	RequestContext(request)
-    )
+            return HttpResponseRedirect('app/signup_complete.html')
     else:
         form = RegistrationForm()
  
@@ -45,31 +42,29 @@ def signup_complete(request):
     'app/signup_complete.html',
     )
 
+@login_required
 def gallery(request):
     return render(request,
     'app/gallery.html',
+	{ 'user': request.user },
     )
-	
+
+@login_required	
 def upload(request):
     return render(request,
     'app/upload.html',
+	{ 'user': request.user },
     )
-	
+
+@login_required	
 def profile(request):
     return render(request,
     'app/profile.html',
+	{ 'user': request.user },
     )
  
 def logout(request):
     logout(request)
     return HttpResponseRedirect('/')
-
-# TODO when database is setup	
-# @login_required
-# def gallery(request):
-    # return render_to_response(
-    # 'gallery.html',
-    # { 'user': request.user }
-    # )
 	
 	
