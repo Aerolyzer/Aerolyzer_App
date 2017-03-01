@@ -63,13 +63,13 @@
                 <ul class="nav navbar-nav navbar-right">
 				{% if not user.is_authenticated %}
                     <li>
-                        <div class="form-group" style="color: red;">
-							{% if form.errors %} 
-								Didn't match! Try again 
-							{% endif %}
+						{% if form.errors %} 
+							Didn't match! Try again 
+						{% endif %}
+                        <div class="form-group">
 							<form class="form" style="display: inline-block;" method="post" action="../app/gallery" id="login-nav">{% csrf_token %}
-                                <label class="sr-only" for="id_email">{{ form.email }}</label>
-                                <input type="email" class="navbar-form form-control-static" id="id_email" placeholder="Email address" required>
+                                <label class="sr-only" for="id_email">{{ form.username }}</label>
+                                <input type="text" class="navbar-form form-control-static" id="id_username" placeholder="Username" required>
                                 <label class="sr-only" for="id_password">{{ form.password }}</label>
                                 <input type="password" class="navbar-form form-control-static" id="id_password" placeholder="Password" required>
                                 <button type="submit" class="btn btn-outline btn-group-lg  page-scroll" value ="Login">Log in</button>
