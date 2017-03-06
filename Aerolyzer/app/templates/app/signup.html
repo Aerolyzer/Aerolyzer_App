@@ -14,13 +14,11 @@
 	</div>
     <section id="download" class="download bg-primary text-center" style="background: white; padding: 50px 50px 50px;">
         <div class="container" style="color: black; text-align: left;">
-			<form method="post" action="../app/signup">{% csrf_token %}>
+			<form method="post" action="../app/signup">{% csrf_token %}
 				<h3>
-					{% csrf_token %}
 					<table class="table">
 						{{ form.as_table }}
 					</table>
-					<!--TODO make button grey until all fields in-->
 					<div style="text-align: center;">
 						<button class="btn btn-outline btn-group-lg  page-scroll">Submit</button>
 					</div>

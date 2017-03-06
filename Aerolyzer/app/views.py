@@ -10,25 +10,25 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
-#TODO add login authentication to every page
 def index(request):
 	if request.method == 'POST':
-		username = request.POST.get('username')
-		password = request.POST.get('password')
-		user = authenticate(username=username, password=password)
+		usr = request.POST['username']
+		psswd = request.POST['password']
+		user = authenticate(username=usr, password=psswd)
 		if user is not None:
 			login(request, user)
 			return HttpResponseRedirect('gallery')
 		else:
-			return HttpResponseRedirect('faq')
+			return render(request, 'app/index.html', {'login_message' : 'That username/password doesn\'t work!'},)
 	return render(request, 'app/index.html', {'user': request.user},)
 
 def about(request):
-	return render(request, 'app/about.html')
+	return render(request, 'app/about.html', {'user': request.user},)
 
 def faq(request):
-	return render(request, 'app/faq.html')
+	return render(request, 'app/faq.html', {'user': request.user},)
 
 def signup(request):
 	if request.method == 'POST':
@@ -44,13 +44,11 @@ def signup(request):
 		form = RegistrationForm()
 	return render(request,
 	'app/signup.html',
-    {'form': form,},
-    )
+	{'form': form, 'user': request.user },
+	)
 
 def signup_complete(request):
-    return render(request,
-    'app/signup_complete.html',
-    )
+	return render(request, 'app/signup_complete.html',{ 'user': request.user },)
 
 @login_required
 def gallery(request):
