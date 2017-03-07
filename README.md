@@ -17,6 +17,6 @@ To run the Aerolyzer app locally (as a Django project):
 
 ##Important things to note are:
 
-1.Postgresql 9.5.g (min requirement) should be installed and running on port 5432 (provide download link for postgresql)
+1.Postgresql 9.5.g (min requirement) should be installed and running on port 5432. Postgresql can be downloaded at https://www.postgresql.org/download/
 2.The database in Postgresql should be set up with the settings as outlined in settings.py namely:
 NAME, USER and PASSWORD settings.
