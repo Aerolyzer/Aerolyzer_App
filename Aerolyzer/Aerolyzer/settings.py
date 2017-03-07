@@ -11,12 +11,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-<<<<<<< HEAD
 import django.contrib.auth
 django.contrib.auth.LOGIN_URL = '/'
-=======
 from whitenoise import WhiteNoise
->>>>>>> 8bcb558c2c76cab7363834d64753975e922d55dc
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -94,7 +92,7 @@ WSGI_APPLICATION = 'Aerolyzer.wsgi.application'
 # )
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'aerolyzer',
         'USER': 'postgres',
         'PASSWORD': 'Aerolyzer_1',
@@ -148,16 +146,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-<<<<<<< HEAD
 
-    os.path.join(
-        os.path.dirname(BASE_DIR), 'static'),
-		os.getcwd() + '/app/static'
-=======
-    
     os.path.join(BASE_DIR, 'app/static'),
->>>>>>> 8bcb558c2c76cab7363834d64753975e922d55dc
 )
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
