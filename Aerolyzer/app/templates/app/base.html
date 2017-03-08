@@ -71,15 +71,16 @@
 								<input type="password" class="navbar-form form-control-static" id="id_password" name="password" placeholder="Password" required>
 								<button type="submit" class="btn btn-outline btn-group-lg  page-scroll" value ="Login">Log in</button>
 							</form>
-              {% if not is_index %}
-            				<form class="form" style="display: inline-block;" action="../app/signup">
-								<button class="btn btn-outline btn-group-lg  page-scroll">Sign up</button>
-            				</form>
+							{% if not is_index %}
+								<form class="form" style="display: inline-block;" action="../app/signup">
+									<button class="btn btn-outline btn-group-lg  page-scroll">Sign up</button>
+								</form>
+							{% endif %}
 							<a class="page-scroll" style="padding-left: 10px;" href="../app/reset">Password probs?</a>
                         </div>
 						<div style="color: #fdcc52; font-weight: bold;">{{ login_message }}</div>
                     </li>
-                {% endif %}
+                
 				{% endif %}
 				{% if user.is_authenticated %}
 					<div class="dropdown" style="position: relative; display: inline-block;">
