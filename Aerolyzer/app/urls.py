@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
 from . import views
 
@@ -9,4 +10,8 @@ urlpatterns = [
 	# Signup URLs
     url(r'^signup$', views.signup, name='signup'),
     url(r'^signup_complete$', views.signup_complete, name='signup_complete'),
+    url(r'^gallery$', views.gallery, name='gallery'),
+    url(r'^profile$', views.profile, name='profile'),
+    url(r'^upload$', views.upload, name='upload'),
+    url(r'^logout_page/$', views.logout_page, name='logout_page'),
 ]
