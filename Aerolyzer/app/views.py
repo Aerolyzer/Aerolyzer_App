@@ -22,7 +22,7 @@ def index(request):
 			return HttpResponseRedirect('gallery')
 		else:
 			return render(request, 'app/index.html', {'login_message' : 'That username/password doesn\'t work!'},)
-	return render(request, 'app/index.html', {'user': request.user, 'is_index':True,},)
+	return render(request, 'app/index.html', {'user': request.user, 'is_index':True},)
 
 def about(request):
 	return render(request, 'app/about.html', {'user': request.user},)
@@ -44,7 +44,7 @@ def signup(request):
 		form = RegistrationForm()
 	return render(request,
 	'app/signup.html',
-	{'form': form, 'user': request.user, 'is_index':True,}, 
+	{'form': form, 'user': request.user, 'is_index':True,},
 	)
 
 def signup_complete(request):

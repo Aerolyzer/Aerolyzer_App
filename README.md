@@ -15,18 +15,17 @@ To run the Aerolyzer app locally:
 
 * Open your browser to http://127.0.0.1:8000/app/
 
-<<<<<<< HEAD
+
 ##Important things to note are:
 
-1.Postgresql 9.5.g (min requirement) should be installed and running on port 5432. Postgresql can be downloaded at https://www.postgresql.org/download/
+1.Postgresql 9.5.6 (min requirement) should be installed and running on port 5432. Postgresql can be downloaded at https://www.postgresql.org/download/
 2.The database in Postgresql should be set up with the settings as outlined in settings.py namely:
-NAME, USER and PASSWORD settings.
-=======
+NAME: aerolyzer, USER: postgres and PASSWORD:Aerolyzer_1 .
 
 
 To run the Aerolyzer app in production (using guincorn and whitenoise):
 
-* Modify the settings.py file 
+* Modify the settings.py file
 
   ```
   cd Aerolyzer/Aerolyzer
@@ -42,5 +41,3 @@ To run the Aerolyzer app in production (using guincorn and whitenoise):
   cd Aerolyzer
   gunicorn Aerolyzer.wsgi
   ```
-
->>>>>>> 8bcb558c2c76cab7363834d64753975e922d55dc
