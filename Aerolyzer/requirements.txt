@@ -2,3 +2,6 @@ Django==1.10.5
 gunicorn==19.6.0
 django-haystack==2.6.0
 whitenoise==3.3.0
+pysolr==3.6.0
+psycopg2==2.6.2
+django-decorator-include-1.2

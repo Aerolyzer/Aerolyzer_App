@@ -11,6 +11,9 @@ class ImageIndex(indexes.SearchIndex, indexes.Indexable):
     def get_model(self):
         return Image
 
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
+
 class GalleryIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     imageIdIdx = indexes.IntegerField(model_attr='imageId')
@@ -18,3 +21,6 @@ class GalleryIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Gallery
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
