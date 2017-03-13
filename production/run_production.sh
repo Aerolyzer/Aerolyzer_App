@@ -58,6 +58,16 @@ cd $APP/Aerolyzer/Aerolyzer
 sed -e "s/DEBUG = True/DEBUG = False/" settings.py > settingsTemp.py
 mv settingsTemp.py settings.py
 
+# Run script to update database stuff
+cd $APP/Aerolyzer
+python manage.py migrate auth
+python manage.py migrate
+
+# Set up Django admin
+echo "Enter Django admin credentials"
+python manage.py createsuperuser
+echo "Thank you for setting up the Django admin credentials"
+
 # Kill any current gunicorn processes
 if [ "$(ps -ef | grep gunicorn | grep -v grep)" ]; then
     echo "Stopping current gunicorn process"
