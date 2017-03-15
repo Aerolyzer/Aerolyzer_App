@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib.admin.views.decorators import staff_member_required
+from decorator_include import decorator_include
 
 urlpatterns = [
     url(r'^app/', include('app.urls')),
     url(r'^admin/', admin.site.urls),
-	url(r'^search/', include('haystack.urls')),
+	url(r'^search/', decorator_include(staff_member_required, include('haystack.urls'))),
 	url(r'^.*/', include('app.urls')),
 ]
