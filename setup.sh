@@ -69,11 +69,11 @@ elif [ $DISTRO == "Darwin" ]; then
 	$BREW_CMD update
 	$BREW_CMD doctor
   $BREW_CMD install postgresql
-  # $BREW_CMD cleanup PostgreSQL
-  # make DB
-  # initdb /usr/local/var/aerolyzer -E utf8
-  # $BREW_CMD services start postgresql
-  # postgres -D /usr/local/var/postgres
+  $BREW_CMD cleanup PostgreSQL
+  echo "configure PostgreSQL"
+  initdb /usr/local/var/aerolyzer -E utf8
+  $BREW_CMD services start postgresql
+  postgres -D /usr/local/var/postgres
   sudo -u postgres bash -c "psql postgres -c \"CREATE DATABASE aerolyzer\""
   sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
 else
@@ -88,30 +88,30 @@ else
 
 echo "end that config"
 exit 1
-# # solr stuff
-# if [ ! -d "$INST_DIR/solr-5.5.4" ]; then
-#   wget http://archive.apache.org/dist/lucene/solr/5.5.4/solr-5.5.4.tgz
-#   tar -xvzf solr-5.5.4.tgz
-#   rm solr-5.5.4.tgz
-# fi
+# solr stuff
+if [ ! -d "$INST_DIR/solr-5.5.4" ]; then
+  wget http://archive.apache.org/dist/lucene/solr/5.5.4/solr-5.5.4.tgz
+  tar -xvzf solr-5.5.4.tgz
+  rm solr-5.5.4.tgz
+fi
 
-# # configure Solr and start
-# if [ ! -d "$INST_DIR/solr-5.5.4/server/solr/aerolyzer" ]; then
-#   mkdir solr-5.5.4/server/solr/aerolyzer
-#   mkdir solr-5.5.4/server/solr/aerolyzer/data
-#   cp -R solr-5.5.4/server/solr/configsets/data_driven_schema_configs/conf solr-5.5.4/server/solr/aerolyzer
-#   cp $APP/schema.xml solr-5.5.4/server/solr/aerolyzer/conf
-#   cp $APP/solrconfig.xml -5.5.4/server/solr/aerolyzer/conf
-# fi
+# configure Solr and start
+if [ ! -d "$INST_DIR/solr-5.5.4/server/solr/aerolyzer" ]; then
+  mkdir solr-5.5.4/server/solr/aerolyzer
+  mkdir solr-5.5.4/server/solr/aerolyzer/data
+  cp -R solr-5.5.4/server/solr/configsets/data_driven_schema_configs/conf solr-5.5.4/server/solr/aerolyzer
+  cp $APP/schema.xml solr-5.5.4/server/solr/aerolyzer/conf
+  cp $APP/solrconfig.xml -5.5.4/server/solr/aerolyzer/conf
+fi
 
-# # start Solr
-# $INST_DIR/solr-5.5.4/bin/solr start
+# start Solr
+$INST_DIR/solr-5.5.4/bin/solr start
 
-# # update Solr index every hr
-# crontab -l > $INST_DIR/mycron
-# echo "0 * * * * $APP/Aerolyzer/manage.py update_index" >> $INST_DIR/mycron
-# crontab $INST_DIR/mycron
-# rm $INST_DIR/mycron
+# update Solr index every hr
+crontab -l > $INST_DIR/mycron
+echo "0 * * * * $APP/Aerolyzer/manage.py update_index" >> $INST_DIR/mycron
+crontab $INST_DIR/mycron
+rm $INST_DIR/mycron
 
 if [ ! -d "$INST_DIR/.virtualenvs/" ]; then
   mkdir $INST_DIR/.virtualenvs/
