@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 class RegistrationForm(forms.Form):
     username = forms.RegexField(regex=r'^\w+$',
         widget=forms.TextInput(attrs=dict(required=True, max_length=30)),
-        error_messages={ 'invalid': _("Must contain only letters, numbers and"
+        error_messages={ 'invalid': _("Must contain only letters, numbers and "
         "underscores. Try again!") })
     email = forms.EmailField(
         widget=forms.TextInput(attrs=dict(required=True, max_length=30)),

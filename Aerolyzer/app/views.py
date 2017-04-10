@@ -21,8 +21,10 @@ def index(request):
 			login(request, user)
 			return HttpResponseRedirect('gallery')
 		else:
-			return render(request, 'app/index.html', {'login_message' : 'That username/password doesn\'t work!'},)
-	return render(request, 'app/index.html', {'user': request.user, 'is_index':True},)
+			return render(request, 'app/index.html', {'login_message' :
+				'That username/password doesn\'t work!'},)
+	return render(request, 'app/index.html', {'user': request.user,
+		'is_index':True},)
 
 def about(request):
 	return render(request, 'app/about.html', {'user': request.user},)
@@ -68,6 +70,27 @@ def upload(request):
 def profile(request):
     return render(request,
     'app/profile.html',
+	{ 'user': request.user },
+    )
+
+@login_required
+def verify(request):
+    return render(request,
+    'app/verify.html',
+	{ 'user': request.user },
+    )
+
+@login_required
+def retrieve(request):
+    return render(request,
+    'app/retrieve.html',
+	{ 'user': request.user },
+    )
+
+@login_required
+def results(request):
+    return render(request,
+    'app/results.html',
 	{ 'user': request.user },
     )
 
