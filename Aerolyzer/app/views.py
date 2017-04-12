@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 def index(request):
 	if request.method == 'POST':
@@ -61,22 +63,30 @@ def gallery(request):
 
 @login_required
 def upload(request):
-    return render(request,
-    'app/upload.html',
-	{ 'user': request.user },
-    )
+	if request.method == 'POST' and request.FILES['myfile']:
+		myfile = request.FILES['myfile']
+		fs = FileSystemStorage()
+		filename = fs.save(myfile.name, myfile)
+		uploaded_file_url = fs.url(filename)
+		# verified = imgRestFuncs(filename)
+		# if verified['is_verified']:
+		# 	return render(request,
+		# 	'app/upload.html',
+		# 	{ 'user': request.user, 'file_name': filename, 'error_message' :
+		# 		verified['msg']},)
+		# else:
+		# 	return render(request,
+		# 	'app/retrieve.html',
+		# 	{ 'user': request.user, 'file_name': filename },)
+		return render(request,
+		'app/upload.html',
+		{ 'user': request.user, 'filename': filename,})
+	return render(request, 'app/upload.html', { 'user': request.user },)
 
 @login_required
 def profile(request):
     return render(request,
     'app/profile.html',
-	{ 'user': request.user },
-    )
-
-@login_required
-def verify(request):
-    return render(request,
-    'app/verify.html',
 	{ 'user': request.user },
     )
 
