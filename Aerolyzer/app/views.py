@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-import datetime
 from django.shortcuts import render
 from app.forms import *
 from django.contrib.auth.decorators import login_required
@@ -67,41 +66,87 @@ def upload(request):
 		myfile = request.FILES['myfile']
 		fs = FileSystemStorage()
 		filename = fs.save(myfile.name, myfile)
-		uploaded_file_url = fs.url(filename)
+		uploadedFileUrl = fs.url(filename)
+		request.session['filename'] = filename
+		request.session['uploadedFileUrl'] = uploadedFileUrl
+		# run code to verify image meets restrictions
+		# assuming code returns tuple with true and exif data, or false and first unmet restriction
 		# verified = imgRestFuncs(filename)
-		# if verified['is_verified']:
+		# if not verified['isVerified']:
 		# 	return render(request,
 		# 	'app/upload.html',
-		# 	{ 'user': request.user, 'file_name': filename, 'error_message' :
-		# 		verified['msg']},)
+		# 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
+		# 		 'error_message': verified['data']},)
 		# else:
-		# 	return render(request,
-		# 	'app/retrieve.html',
-		# 	{ 'user': request.user, 'file_name': filename },)
-		return render(request,
-		'app/upload.html',
-		{ 'user': request.user, 'filename': filename,})
-	return render(request, 'app/upload.html', { 'user': request.user },)
+		#	request.session['exifData'] = verified['data']
+		return HttpResponseRedirect('retrieve')
+	return render(request, 'app/upload.html', { 'user': request.user, },)
 
 @login_required
 def profile(request):
     return render(request,
     'app/profile.html',
-	{ 'user': request.user },
+	{ 'user': request.user, },
     )
 
 @login_required
 def retrieve(request):
-    return render(request,
+	uploadedFileUrl = request.session['uploadedFileUrl']
+	filename = request.session['filename']
+	# exifData = request.session['exifData']
+
+	if request.method == 'POST':
+		# run code to get weather and misr data
+		# wunderData = retrieve_weather_info(exifData['location'])
+		# if wunderData is None:
+		# 	return render(request,
+		#     'app/retrieve.html',
+		# 	{ 'user': request.user, 'error_message': 'weather' },
+		#     )
+		# request.session['wunderData'] = wunderData
+		# misrData = retrieve_misr_info(exifData['location'])
+		# if misrData is None:
+		# 	return render(request,
+		#     'app/retrieve.html',
+		# 	{ 'user': request.user, 'error_message': 'satellite' },
+		#     )
+		# request.session['misrData'] = misrData
+	    # return render(request,
+	    # 'app/retrieve.html',
+		# { 'user': request.user, 'exifData' : exifData,
+		# 'wunderData': wunderData, 'misrData': misrData, 'all_clear': True, },
+	    # )
+	    return render(request,
+	    'app/retrieve.html',
+		{ 'user': request.user, 'exifData' : 'exif here',
+		'wunderData': 'wunder here', 'misrData': 'misr here', 'all_clear': True,
+		'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
+	    )
+
+	return render(request,
     'app/retrieve.html',
-	{ 'user': request.user },
+	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
+	'all_clear': False,},
     )
 
 @login_required
 def results(request):
-    return render(request,
+	# run code for algorithm
+	# exifData = request.session['exifData']
+	# wunderData = request.session['wunderData']
+	# misrData = request.session['misrData']
+	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
+	# TODO use pysolr to add all to database
+    # return render(request,
+    # 'app/results.html',
+	# { 'user': request.user, 'aerosol': aerosol,
+	# 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
+    # )
+	uploadedFileUrl = request.session['uploadedFileUrl']
+	filename = request.session['filename']
+	return render(request,
     'app/results.html',
-	{ 'user': request.user },
+	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
     )
 
 def logout_page(request):

@@ -14,8 +14,23 @@
 	</div>
     <section id="download" class="download bg-primary text-center" style="background: white; padding: 50px 50px 50px;">
         <div class="container" style="color: black; text-align: left;">
-
-		</div>
+						<h3>
+							<div style="text-align: left;">Aerosol content</div>
+							<div class="container" style="color: black; text-align: left; width: 50%; float: left; border: 5px solid black;">
+								{{ aerosol }}
+							</div>
+							<div style="text-align: right;">
+								<img src="{{ uploadedFileUrl }}" alt="{{ filename }}"
+								style="max-height: 500px; max-width: 500px; float: right;" >
+							</div>
+						</h3>
+						<br> <br>
+						<div style="text-align: left;">
+							<form class="form" action="../app/gallery"> {% csrf_token %}
+									<button class="btn btn-outline btn-group-lg  page-scroll" style="display: inline-block;">View in gallery</button>
+							</form>
+						</div>
+				</div>
     </section>
 </header>
 

@@ -15,12 +15,13 @@
     <section id="download" class="download bg-primary text-center" style="background: white; padding: 50px 50px 50px;">
         <div class="container" style="color: black; text-align: left;">
 					<!-- {% if error_message %}
-						<h3>Error: image <strong>{{ filename }}</strong> did not meet <strong>{{ error_message }}</strong> restriction. Sorry about that! Try again?</h3>
+						<h3>Error: image <strong>{{ filename }}</strong> did not meet <strong>{{ error_message }}
+						</strong> restriction. Sorry about that! Try again?</h3>
+
 						For more info about image restrictions, <a href="../app/faq">visit our FAQ.</a>
 						<br> <br>
 					{% endif %} -->
-
-					<form method="post" enctype="multipart/form-data"> {% csrf_token %}
+					<form method="post" action="../app/upload" enctype="multipart/form-data"> {% csrf_token %}
 						<div style="text-align: center;">
 							<input type="file" name="myfile" id="myfile">
 	 						<button class="btn btn-outline btn-group-lg  page-scroll">Submit</button>
