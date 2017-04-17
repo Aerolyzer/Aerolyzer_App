@@ -69,14 +69,12 @@ def upload(request):
 		uploadedFileUrl = fs.url(filename)
 		request.session['filename'] = filename
 		request.session['uploadedFileUrl'] = uploadedFileUrl
-		# run code to verify image meets restrictions
-		# assuming code returns tuple with true and exif data, or false and first unmet restriction
 		# verified = imgRestFuncs(filename)
 		# if not verified['isVerified']:
 		# 	return render(request,
 		# 	'app/upload.html',
 		# 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
-		# 		 'error_message': verified['data']},)
+		# 	'error_message': verified['data']},)
 		# else:
 		#	request.session['exifData'] = verified['data']
 		return HttpResponseRedirect('retrieve')
@@ -96,7 +94,6 @@ def retrieve(request):
 	# exifData = request.session['exifData']
 
 	if request.method == 'POST':
-		# run code to get weather and misr data
 		# wunderData = retrieve_weather_info(exifData['location'])
 		# if wunderData is None:
 		# 	return render(request,
@@ -131,7 +128,8 @@ def retrieve(request):
 
 @login_required
 def results(request):
-	# run code for algorithm
+	uploadedFileUrl = request.session['uploadedFileUrl']
+	filename = request.session['filename']
 	# exifData = request.session['exifData']
 	# wunderData = request.session['wunderData']
 	# misrData = request.session['misrData']
@@ -142,8 +140,6 @@ def results(request):
 	# { 'user': request.user, 'aerosol': aerosol,
 	# 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
     # )
-	uploadedFileUrl = request.session['uploadedFileUrl']
-	filename = request.session['filename']
 	return render(request,
     'app/results.html',
 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},

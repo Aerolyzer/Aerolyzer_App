@@ -13,11 +13,12 @@
 		</div>
 	</div>
     <section id="download" class="download bg-primary text-center" style="background: white; color: black; text-align: left; padding: 50px 50px 50px;">
-				<!-- {% if error_message %}
-					<h3>Error: unable to retrieve {{ error_message }} data. Sorry about that!</h3>
-					<h3><a href="../app/upload">Try again?</a></h3>
+			<div class="container" style="color: black; text-align: left;">
+				{% if error_message %}
+					<h3>Error: unable to retrieve <strong> {{ error_message }} </strong> data.
+						Sorry about that! <a href="../app/upload">Try again?</a></h3>
 					<br> <br>
-				{% endif %} -->
+				{% endif %}
 				<div style="text-align: center;">
 					<img src="{{ uploadedFileUrl }}" alt="{{ filename }}" style="max-height: 500px; max-width: 500px;" >
 				</div>
@@ -34,8 +35,6 @@
 				<div class="container" style="color: black; text-align: left; border: 5px solid black;">
 					{{ wunderData }}
 				</div>
-
-				<!-- add js to below if block to show some sort of loading bar/progress? -->
 
 				{% if not all_clear %}
 					<form method="post" action="../app/retrieve"> {% csrf_token %}
@@ -54,7 +53,7 @@
 						</div>
 					</form>
 				{% endif %}
-
+			</div>
     </section>
 </header>
 
