@@ -12,6 +12,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+import exifread
+import os
 
 def index(request):
 	if request.method == 'POST':
@@ -69,14 +71,35 @@ def upload(request):
 		uploadedFileUrl = fs.url(filename)
 		request.session['filename'] = filename
 		request.session['uploadedFileUrl'] = uploadedFileUrl
-		# verified = imgRestFuncs(filename)
+		# verified = imgRestFuncs(media/" + filename)
 		# if not verified['isVerified']:
+		#	os.remove("media/" + filename)
 		# 	return render(request,
 		# 	'app/upload.html',
 		# 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
 		# 	'error_message': verified['data']},)
 		# else:
-		#	request.session['exifData'] = verified['data']
+		#TODO indent
+		f = open("media/" + filename, 'rb')
+		tags = exifread.process_file(f)
+		latitude = tags["GPS GPSLatitude"]
+		d = float(latitude.values[0].num) / float(latitude.values[0].den)
+		m = float(latitude.values[1].num) / float(latitude.values[1].den)
+		s = float(latitude.values[2].num) / float(latitude.values[2].den)
+		exifLat = d + (m / 60.0) + (s / 3600.0)
+		if tags["GPS GPSLatitudeRef"].values[0] != "N":
+			exifLat = 0 - exifLat
+		longitude = tags["GPS GPSLongitude"]
+		d = float(longitude.values[0].num) / float(longitude.values[0].den)
+		m = float(longitude.values[1].num) / float(longitude.values[1].den)
+		s = float(longitude.values[2].num) / float(longitude.values[2].den)
+		exifLong = d + (m / 60.0) + (s / 3600.0)
+		if tags["GPS GPSLongitudeRef"].values[0] != "E":
+			exifLong = 0 - exifLong
+		location = "%f,%f" % (exifLat, exifLong)
+		# exifData = dictionary of all needed exif data
+		# TODO add other needed exif data to dictionary
+		request.session['exifData'] = {"location": location}
 		return HttpResponseRedirect('retrieve')
 	return render(request, 'app/upload.html', { 'user': request.user, },)
 
@@ -91,18 +114,20 @@ def profile(request):
 def retrieve(request):
 	uploadedFileUrl = request.session['uploadedFileUrl']
 	filename = request.session['filename']
-	# exifData = request.session['exifData']
-
+	exifData = request.session['exifData']
+	location = exifData['location']
 	if request.method == 'POST':
-		# wunderData = retrieve_weather_info(exifData['location'])
+		# wunderData = retrieve_weather_info(location)
 		# if wunderData is None:
+		#	os.remove("media/" + filename)
 		# 	return render(request,
 		#     'app/retrieve.html',
 		# 	{ 'user': request.user, 'error_message': 'weather' },
 		#     )
 		# request.session['wunderData'] = wunderData
-		# misrData = retrieve_misr_info(exifData['location'])
+		# misrData = retrieve_misr_info(location)
 		# if misrData is None:
+		#	os.remove("media/" + filename)
 		# 	return render(request,
 		#     'app/retrieve.html',
 		# 	{ 'user': request.user, 'error_message': 'satellite' },
@@ -113,9 +138,9 @@ def retrieve(request):
 		# { 'user': request.user, 'exifData' : exifData,
 		# 'wunderData': wunderData, 'misrData': misrData, 'all_clear': True, },
 	    # )
-	    return render(request,
+		return render(request,
 	    'app/retrieve.html',
-		{ 'user': request.user, 'exifData' : 'exif here',
+		{ 'user': request.user, 'exifData' : exifData,
 		'wunderData': 'wunder here', 'misrData': 'misr here', 'all_clear': True,
 		'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
 	    )
@@ -134,11 +159,12 @@ def results(request):
 	# wunderData = request.session['wunderData']
 	# misrData = request.session['misrData']
 	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
-	# TODO use pysolr to add all to database
+	# os.remove("media/" + filename)
+	# TODO use pysolr to add all to database and display image
     # return render(request,
     # 'app/results.html',
 	# { 'user': request.user, 'aerosol': aerosol,
-	# 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
+	# 'image': retrievedSolrImg},
     # )
 	return render(request,
     'app/results.html',
