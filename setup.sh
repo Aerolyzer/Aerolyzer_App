@@ -18,6 +18,7 @@
 # under the License.
 # ------------------------------------------------------------
 # This script is used to install all the dependency programs
+# Assumption that it is run as sudo
 
 clear
 
@@ -51,9 +52,9 @@ fi
 
 # install PostgreSQL
 if [ ! -z $APT_GET_CMD ]; then
-  sudo $APT_GET_CMD install postgresql postgresql-contrib
-  sudo $APT_GET_CMD install python-psycopg2
-  sudo $APT_GET_CMD install libpq-dev
+  $APT_GET_CMD install postgresql postgresql-contrib
+  $APT_GET_CMD install python-psycopg2
+  $APT_GET_CMD install libpq-dev
 
   echo "configure PostgreSQL"
   # configure PostgreSQL
@@ -61,32 +62,37 @@ if [ ! -z $APT_GET_CMD ]; then
   sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
 
 elif [[ ! -z $YUM_CMD ]]; then
-	sudo $YUM_CMD install postgresql
+	$YUM_CMD install postgresql-server
+  service postgresql initdb
+  chkconfig postgresql on
+  sudo -u postgres bash -c "psql postgres -c \"CREATE DATABASE aerolyzer\""
+  sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
+
 elif [ $DISTRO == "Darwin" ]; then
 	if [ -z $BREW_CMD ]; then
-		sudo /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	fi
+  # ref: https://gist.github.com/lxneng/741932
 	$BREW_CMD update
 	$BREW_CMD doctor
   $BREW_CMD install postgresql
   $BREW_CMD cleanup PostgreSQL
-  echo "configure PostgreSQL"
-  initdb /usr/local/var/aerolyzer -E utf8
+  echo "initalize PostgreSQL"
+  initdb /usr/local/var/postgres
+  echo "start the postgres server"
   $BREW_CMD services start postgresql
   postgres -D /usr/local/var/postgres
-  sudo -u postgres bash -c "psql postgres -c \"CREATE DATABASE aerolyzer\""
-  sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
+  echo "set up postgres user pwd"
+  bash -c "psql -U postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
+  echo "create aerolyzer database"
+  bash -c "psql -U postgres -c \"CREATE DATABASE aerolyzer"\"
+  
 else
     echo "Error: Cannot identify package manager, thus cannot install PostgreSQL. Exiting!!!!!"
     exit 1;
  fi
 
-# echo "configure PostgreSQL"
-# # configure PostgreSQL
-# sudo -u postgres bash -c "psql postgres -c \"CREATE DATABASE aerolyzer\""
-# sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
-
-echo "end that config"
+echo "End PostgreSQL config"
 exit 1
 # solr stuff
 if [ ! -d "$INST_DIR/solr-5.5.4" ]; then
