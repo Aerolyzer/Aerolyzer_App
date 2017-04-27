@@ -165,7 +165,7 @@ def results(request):
 	solrFilename = username + filename
 	# Setup a Solr instance. The timeout is optional.
 	solr = pysolr.Solr('http://localhost:8983/solr/aerolyzer', timeout=10)
-
+	#TODO put file in installDir and display image from database
 	# How you'd index data.
 	solr.add([
 	    {
