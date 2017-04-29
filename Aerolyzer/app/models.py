@@ -5,6 +5,7 @@ from django.db import models
 # Create your models here.
 class Image(models.Model):
 	imageId = models.AutoField(primary_key=True)
+	filename = models.CharField(max_length=200, default = "none")
 	exif = models.CharField(max_length=200)
 	misr = models.CharField(max_length=200)
 	wunder = models.CharField(max_length=200)

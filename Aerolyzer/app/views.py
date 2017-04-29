@@ -14,6 +14,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import exifread
 import os
+import pysolr
+
 
 def index(request):
 	if request.method == 'POST':
@@ -161,6 +163,7 @@ def results(request):
 	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
 	# os.remove("media/" + filename)
 	# TODO use pysolr to add all to database and display image
+
     # return render(request,
     # 'app/results.html',
 	# { 'user': request.user, 'aerosol': aerosol,
