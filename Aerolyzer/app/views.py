@@ -16,6 +16,7 @@ import exifread
 import os
 import pysolr
 
+
 def index(request):
 	if request.method == 'POST':
 		usr = request.POST['username']
@@ -114,7 +115,6 @@ def profile(request):
 @login_required
 def retrieve(request):
 	uploadedFileUrl = request.session['uploadedFileUrl']
-	print uploadedFileUrl
 	filename = request.session['filename']
 	exifData = request.session['exifData']
 	location = exifData['location']
@@ -157,27 +157,13 @@ def retrieve(request):
 def results(request):
 	uploadedFileUrl = request.session['uploadedFileUrl']
 	filename = request.session['filename']
-	exifData = request.session['exifData']
+	# exifData = request.session['exifData']
 	# wunderData = request.session['wunderData']
 	# misrData = request.session['misrData']
 	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
-	username = request.user.username
-	solrFilename = username + filename
-	# Setup a Solr instance. The timeout is optional.
-	solr = pysolr.Solr('http://localhost:8983/solr/aerolyzer', timeout=10)
-	#TODO put file in installDir and display image from database
-	# How you'd index data.
-	solr.add([
-	    {
-	        "filename": solrFilename,
-	        "exif": exifData,
-			#"misr": misrData,
-			#"wunder": wunderData,
-		#	"results": aerosol,
-			"username": username,
-	    },
-	])
-	os.remove("media/" + filename)
+	# os.remove("media/" + filename)
+	# TODO use pysolr to add all to database and display image
+
     # return render(request,
     # 'app/results.html',
 	# { 'user': request.user, 'aerosol': aerosol,

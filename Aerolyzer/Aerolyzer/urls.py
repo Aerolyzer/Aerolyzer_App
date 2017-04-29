@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.contrib.admin.views.decorators import staff_member_required
 from decorator_include import decorator_include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^app/', include('app.urls')),
@@ -25,3 +27,6 @@ urlpatterns = [
 	url(r'^search/', decorator_include(staff_member_required, include('haystack.urls'))),
 	url(r'^.*/', include('app.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
