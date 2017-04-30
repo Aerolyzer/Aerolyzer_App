@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from app.forms import *
+from app.wunderData import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
@@ -15,6 +16,7 @@ from django.core.files.storage import FileSystemStorage
 import exifread
 import os
 import pysolr
+import time
 
 
 def index(request):
@@ -73,13 +75,12 @@ def upload(request):
 		uploadedFileUrl = fs.url(filename)
 		request.session['filename'] = filename
 		request.session['uploadedFileUrl'] = uploadedFileUrl
-		# verified = imgRestFuncs(media/" + filename)
-		# if not verified['isVerified']:
+		# verified = imgRestFuncs("media/" + filenamee)
+		# if not verified:
 		#	os.remove("media/" + filename)
 		# 	return render(request,
 		# 	'app/upload.html',
-		# 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
-		# 	'error_message': verified['data']},)
+		# 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl},)
 		# else:
 		#TODO indent
 		f = open("media/" + filename, 'rb')
@@ -119,14 +120,15 @@ def retrieve(request):
 	exifData = request.session['exifData']
 	location = exifData['location']
 	if request.method == 'POST':
-		# wunderData = retrieve_weather_info(location)
-		# if wunderData is None:
-		#	os.remove("media/" + filename)
-		# 	return render(request,
-		#     'app/retrieve.html',
-		# 	{ 'user': request.user, 'error_message': 'weather' },
-		#     )
-		# request.session['wunderData'] = wunderData
+		weatherData = getData(location)
+		if weatherData is None:
+			os.remove("media/" + filename)
+		 	return render(request,
+		     'app/retrieve.html',
+		 	{ 'user': request.user, 'exifData' : exifData, 'all_clear': False,
+			'error_message': 'weather', 'filename': filename, 'uploadedFileUrl': uploadedFileUrl, },
+		     )
+		request.session['wunderData'] = weatherData
 		# misrData = retrieve_misr_info(location)
 		# if misrData is None:
 		#	os.remove("media/" + filename)
@@ -143,7 +145,7 @@ def retrieve(request):
 		return render(request,
 	    'app/retrieve.html',
 		{ 'user': request.user, 'exifData' : exifData,
-		'wunderData': 'wunder here', 'misrData': 'misr here', 'all_clear': True,
+		'wunderData': weatherData, 'misrData': 'misr here', 'all_clear': True,
 		'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
 	    )
 
@@ -156,23 +158,39 @@ def retrieve(request):
 @login_required
 def results(request):
 	uploadedFileUrl = request.session['uploadedFileUrl']
-	filename = request.session['filename']
-	# exifData = request.session['exifData']
-	# wunderData = request.session['wunderData']
-	# misrData = request.session['misrData']
-	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
-	# os.remove("media/" + filename)
-	# TODO use pysolr to add all to database and display image
+ 	filename = request.session['filename']
+ 	exifData = request.session['exifData']
+ 	weatherData = request.session['wunderData']
+ 	# misrData = request.session['misrData']
+ 	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
+ 	username = request.user.username
+	unique = str(int(time.time()))
+ 	solrFilename = username + "-" + unique + "_" + filename
+ 	# Setup a Solr instance. The timeout is optional.
+ 	solr = pysolr.Solr('http://localhost:8983/solr/aerolyzer', timeout=10)
 
-    # return render(request,
+ 	# How you'd index data.
+ 	solr.add([
+ 	    {
+ 	        "filename": solrFilename,
+ 	        "exif": exifData,
+ 			#"misr": misrData,
+ 			"wunder": weatherData,
+ 			#"results": aerosol,
+ 			"username": username,
+ 	    },
+ 	])
+	newFilename = os.path.abspath('../..') + "/installDir/" + unique + "_" + filename
+	os.rename(os.getcwd() + "/media/" + filename, newFilename)
+	print "uploaded=" + uploadedFileUrl
+     # return render(request,
     # 'app/results.html',
 	# { 'user': request.user, 'aerosol': aerosol,
 	# 'image': retrievedSolrImg},
     # )
 	return render(request,
-    'app/results.html',
-	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},
-    )
+	'app/results.html',
+	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,},)
 
 def logout_page(request):
     logout(request)
