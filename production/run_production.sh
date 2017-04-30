@@ -30,20 +30,11 @@ echo "Script to run Aerolyzer app in production mode. Engage Number 1!"
 
 APP="$PWD/.."
 
-if [ ! -d "$HOME/.virtualenvs/" ]; then
-    cd $HOME
-    mkdir $HOME/.virtualenvs/
-fi
-
-if [ ! -d "$HOME/.virtualenvs/aerolyzer" ]; then
-	cd $HOME/.virtualenvs/
-	virtualenv aerolyzer
-    echo "Virtualenv env created at ~/.virtualenvs/aerolyzer"
-fi
+INST_DIR="$APP/../installDir"
     
 # start aerolyzer virtual env
 cd $APP/Aerolyzer
-source $HOME/.virtualenvs/aerolyzer/bin/activate
+source $INST_DIR/.virtualenvs/aerolyzer/bin/activate
 
 # install requirements
 pip install -r requirements.txt
