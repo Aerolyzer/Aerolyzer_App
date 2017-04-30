@@ -18,40 +18,42 @@
 					<h3>Error: unable to retrieve <strong> {{ error_message }} </strong> data.
 						Sorry about that! <a href="../app/upload">Try again?</a></h3>
 					<br> <br>
-				{% endif %}
-				<div style="text-align: center;">
-					<img src="{{ uploadedFileUrl }}" alt="{{ filename }}" style="max-height: 500px; max-width: 500px;" >
-				</div>
+				{% else %}
 
-				<h3>EXIF data</h3>
-				<div class="container" style="color: black; text-align: left; border: 5px solid black;">
-					{{ exifData }}
-				</div>
-				<h3>MISR (satellite) data</h3>
-				<div class="container" style="color: black; text-align: left; border: 5px solid black;">
-					{{ misrData }}
-				</div>
-				<h3>Wunderground (weather) data</h3>
-				<div class="container" style="color: black; text-align: left; border: 5px solid black;">
-					{{ wunderData }}
-				</div>
+					<div style="text-align: center;">
+						<img src="{{ uploadedFileUrl }}" alt="{{ filename }}" style="max-height: 500px; max-width: 500px;" >
+					</div>
 
-				{% if not all_clear %}
-					<form method="post" action="../app/retrieve"> {% csrf_token %}
-						<div style="text-align: center;">
-							<br> <br>
-							<button class="btn btn-outline btn-group-lg  page-scroll">Start</button>
-						</div>
-					</form>
+					<h3>EXIF data</h3>
+					<div class="container" style="color: black; text-align: left; border: 5px solid black;">
+						{{ exifData }}
+					</div>
+					<h3>MISR (satellite) data</h3>
+					<div class="container" style="color: black; text-align: left; border: 5px solid black;">
+						{{ misrData }}
+					</div>
+					<h3>Wunderground (weather) data</h3>
+					<div class="container" style="color: black; text-align: left; border: 5px solid black;">
+						{{ wunderData }}
+					</div>
+
+					{% if not all_clear %}
+						<form method="post" action="../app/retrieve"> {% csrf_token %}
+							<div style="text-align: center;">
+								<br> <br>
+								<button class="btn btn-outline btn-group-lg  page-scroll">Start</button>
+							</div>
+						</form>
 					{% endif %}
 
-				{% if all_clear %}
-					<form method="post" action="../app/results"> {% csrf_token %}
-						<div style="text-align: center;">
-							<br> <br>
-							<button class="btn btn-outline btn-group-lg  page-scroll">Analyze!</button>
-						</div>
-					</form>
+					{% if all_clear %}
+						<form method="post" action="../app/results"> {% csrf_token %}
+							<div style="text-align: center;">
+								<br> <br>
+								<button class="btn btn-outline btn-group-lg  page-scroll">Analyze!</button>
+							</div>
+						</form>
+					{% endif %}
 				{% endif %}
 			</div>
     </section>
