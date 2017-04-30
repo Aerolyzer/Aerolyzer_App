@@ -5,3 +5,4 @@ whitenoise==3.3.0
 pysolr==3.6.0
 psycopg2==2.6.2
 django-decorator-include==1.2
+exifread==2.1.2
