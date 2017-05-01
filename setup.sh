@@ -32,6 +32,11 @@ INST_DIR="$APP/../installDir"
 if [ ! -d $INST_DIR ]; then
   mkdir $INST_DIR
 fi
+
+MEDIA_DIR="$APP/../installDir/aerolyzerImgs"
+if [ ! -d $MEDIA_DIR ]; then
+  mkdir $MEDIA_DIR
+fi
 cd $INST_DIR
 
 # Check for installation machine distro and package manager
@@ -52,6 +57,7 @@ fi
 
 # install PostgreSQL
 if [ ! -z $APT_GET_CMD ]; then
+  echo "Ubuntu OS config ..."
   $APT_GET_CMD install postgresql postgresql-contrib
   $APT_GET_CMD install python-psycopg2
   $APT_GET_CMD install libpq-dev
@@ -62,6 +68,7 @@ if [ ! -z $APT_GET_CMD ]; then
   sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
 
 elif [[ ! -z $YUM_CMD ]]; then
+  echo "Red Hat OS config ..."
 	$YUM_CMD install postgresql-server
   service postgresql initdb
   chkconfig postgresql on
@@ -69,6 +76,7 @@ elif [[ ! -z $YUM_CMD ]]; then
   sudo -u postgres bash -c "psql postgres -c \"ALTER USER postgres WITH PASSWORD 'Aerolyzer_1'\""
 
 elif [ $DISTRO == "Darwin" ]; then
+  echo "Mac OS config ..."
 	if [ -z $BREW_CMD ]; then
 		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	fi
@@ -93,7 +101,6 @@ else
  fi
 
 echo "End PostgreSQL config"
-exit 1
 # solr stuff
 if [ ! -d "$INST_DIR/solr-5.5.4" ]; then
   wget http://archive.apache.org/dist/lucene/solr/5.5.4/solr-5.5.4.tgz
@@ -107,7 +114,7 @@ if [ ! -d "$INST_DIR/solr-5.5.4/server/solr/aerolyzer" ]; then
   mkdir solr-5.5.4/server/solr/aerolyzer/data
   cp -R solr-5.5.4/server/solr/configsets/data_driven_schema_configs/conf solr-5.5.4/server/solr/aerolyzer
   cp $APP/schema.xml solr-5.5.4/server/solr/aerolyzer/conf
-  cp $APP/solrconfig.xml -5.5.4/server/solr/aerolyzer/conf
+  cp $APP/solrconfig.xml solr-5.5.4/server/solr/aerolyzer/conf
 fi
 
 # start Solr
