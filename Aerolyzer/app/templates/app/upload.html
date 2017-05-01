@@ -15,8 +15,8 @@
     <section id="download" class="download bg-primary text-center" style="background: white; padding: 50px 50px 50px;">
         <div class="container" style="color: black; text-align: left;">
 					{% if error_message %}
-						<h3>Error: image <strong>{{ filename }}</strong> did not meet <strong>{{ error_message }}
-						</strong> restriction. Sorry about that! Try again?</h3>
+						<h3>Error: image <strong>{{ filename }}</strong> did not meet our restrictions:
+						<strong>{{ error_message }}</strong> restriction. Sorry about that! Try again?</h3>
 
 						For more info about image restrictions, <a href="../app/faq">visit our FAQ.</a>
 						<br> <br>

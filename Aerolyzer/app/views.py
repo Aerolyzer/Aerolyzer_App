@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from app.forms import *
 from app.wunderData import *
+from app.image_restriction_main import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
@@ -75,35 +76,34 @@ def upload(request):
 		uploadedFileUrl = fs.url(filename)
 		request.session['filename'] = filename
 		request.session['uploadedFileUrl'] = uploadedFileUrl
-		# verified = imgRestFuncs("media/" + filenamee)
-		# if not verified:
-		#	os.remove("media/" + filename)
-		# 	return render(request,
-		# 	'app/upload.html',
-		# 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl},)
-		# else:
-		#TODO indent
-		f = open("media/" + filename, 'rb')
-		tags = exifread.process_file(f)
-		latitude = tags["GPS GPSLatitude"]
-		d = float(latitude.values[0].num) / float(latitude.values[0].den)
-		m = float(latitude.values[1].num) / float(latitude.values[1].den)
-		s = float(latitude.values[2].num) / float(latitude.values[2].den)
-		exifLat = d + (m / 60.0) + (s / 3600.0)
-		if tags["GPS GPSLatitudeRef"].values[0] != "N":
-			exifLat = 0 - exifLat
-		longitude = tags["GPS GPSLongitude"]
-		d = float(longitude.values[0].num) / float(longitude.values[0].den)
-		m = float(longitude.values[1].num) / float(longitude.values[1].den)
-		s = float(longitude.values[2].num) / float(longitude.values[2].den)
-		exifLong = d + (m / 60.0) + (s / 3600.0)
-		if tags["GPS GPSLongitudeRef"].values[0] != "E":
-			exifLong = 0 - exifLong
-		location = "%f,%f" % (exifLat, exifLong)
-		# exifData = dictionary of all needed exif data
-		# TODO add other needed exif data to dictionary
-		request.session['exifData'] = {"location": location}
-		return HttpResponseRedirect('retrieve')
+		verified = mainFxn("media/" + filename)
+		if not verified['meetsRest']:
+			os.remove("media/" + filename)
+		 	return render(request,
+		 	'app/upload.html',
+		 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
+			'error_message': verified['error_message'],},)
+		else:
+			f = open("media/" + filename, 'rb')
+			tags = exifread.process_file(f)
+			f.close()
+			latitude = tags["GPS GPSLatitude"]
+			d = float(latitude.values[0].num) / float(latitude.values[0].den)
+			m = float(latitude.values[1].num) / float(latitude.values[1].den)
+			s = float(latitude.values[2].num) / float(latitude.values[2].den)
+			exifLat = d + (m / 60.0) + (s / 3600.0)
+			if tags["GPS GPSLatitudeRef"].values[0] != "N":
+				exifLat = 0 - exifLat
+			longitude = tags["GPS GPSLongitude"]
+			d = float(longitude.values[0].num) / float(longitude.values[0].den)
+			m = float(longitude.values[1].num) / float(longitude.values[1].den)
+			s = float(longitude.values[2].num) / float(longitude.values[2].den)
+			exifLong = d + (m / 60.0) + (s / 3600.0)
+			if tags["GPS GPSLongitudeRef"].values[0] != "E":
+				exifLong = 0 - exifLong
+			location = "%f,%f" % (exifLat, exifLong)
+			request.session['exifData'] = {"location": location}
+			return HttpResponseRedirect('retrieve')
 	return render(request, 'app/upload.html', { 'user': request.user, },)
 
 @login_required
@@ -126,8 +126,8 @@ def retrieve(request):
 		 	return render(request,
 		     'app/retrieve.html',
 		 	{ 'user': request.user, 'exifData' : exifData, 'all_clear': False,
-			'error_message': 'weather', 'filename': filename, 'uploadedFileUrl': uploadedFileUrl, },
-		     )
+			'error_message': 'weather', 'filename': filename,
+			'uploadedFileUrl': uploadedFileUrl,},)
 		request.session['wunderData'] = weatherData
 		# misrData = retrieve_misr_info(location)
 		# if misrData is None:
