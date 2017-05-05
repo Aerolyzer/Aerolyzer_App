@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from app.forms import *
-from app.wunderData import *
+from aerolyzer import *
 from app.image_restriction_main import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -120,7 +120,7 @@ def retrieve(request):
 	exifData = request.session['exifData']
 	location = exifData['location']
 	if request.method == 'POST':
-		weatherData = getData(location)
+		weatherData = wunderData.getData(location)
 		if weatherData is None:
 			os.remove("media/" + filename)
 		 	return render(request,
