@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from app.forms import *
-from app.wunderData import *
+from aerolyzer import *
 from app.image_restriction_main import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+from shutil import copyfile
 import exifread
 import os
 import pysolr
@@ -120,7 +121,7 @@ def retrieve(request):
 	exifData = request.session['exifData']
 	location = exifData['location']
 	if request.method == 'POST':
-		weatherData = getData(location)
+		weatherData = wunderData.get_data(location)
 		if weatherData is None:
 			os.remove("media/" + filename)
 		 	return render(request,
@@ -166,10 +167,7 @@ def results(request):
  	username = request.user.username
 	unique = str(int(time.time()))
  	solrFilename = username + "-" + unique + "_" + filename
- 	# Setup a Solr instance. The timeout is optional.
  	solr = pysolr.Solr('http://localhost:8983/solr/aerolyzer', timeout=10)
-
- 	# How you'd index data.
  	solr.add([
  	    {
  	        "filename": solrFilename,
@@ -181,8 +179,7 @@ def results(request):
  	    },
  	])
 	newFilename = os.path.abspath('../..') + "/installDir/" + unique + "_" + filename
-	os.rename(os.getcwd() + "/media/" + filename, newFilename)
-	print "uploaded=" + uploadedFileUrl
+	copyfile(os.getcwd() + "/media/" + filename, newFilename)
      # return render(request,
     # 'app/results.html',
 	# { 'user': request.user, 'aerosol': aerosol,
