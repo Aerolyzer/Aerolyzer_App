@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from app.forms import *
 from aerolyzer import *
-from app.image_restriction_main import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_protect
@@ -15,7 +14,6 @@ from django.contrib import messages
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from shutil import copyfile
-import exifread
 import os
 import pysolr
 import time
@@ -77,7 +75,7 @@ def upload(request):
 		uploadedFileUrl = fs.url(filename)
 		request.session['filename'] = filename
 		request.session['uploadedFileUrl'] = uploadedFileUrl
-		verified = mainFxn("media/" + filename)
+		verified = check_image("media/" + filename)
 		if not verified['meetsRest']:
 			os.remove("media/" + filename)
 		 	return render(request,
@@ -85,25 +83,25 @@ def upload(request):
 		 	{ 'user': request.user, 'filename': filename, 'uploadedFileUrl': uploadedFileUrl,
 			'error_message': verified['error_message'],},)
 		else:
-			f = open("media/" + filename, 'rb')
-			tags = exifread.process_file(f)
-			f.close()
-			latitude = tags["GPS GPSLatitude"]
+			locExifData = verified["locExifData"]
+			exifData = verified["exifData"]
+			latitude = locExifData['gps gpslatitude']
 			d = float(latitude.values[0].num) / float(latitude.values[0].den)
 			m = float(latitude.values[1].num) / float(latitude.values[1].den)
 			s = float(latitude.values[2].num) / float(latitude.values[2].den)
 			exifLat = d + (m / 60.0) + (s / 3600.0)
-			if tags["GPS GPSLatitudeRef"].values[0] != "N":
+			if locExifData["gps gpslatituderef"].values[0] != "N":
 				exifLat = 0 - exifLat
-			longitude = tags["GPS GPSLongitude"]
+			longitude = locExifData["gps gpslongitude"]
 			d = float(longitude.values[0].num) / float(longitude.values[0].den)
 			m = float(longitude.values[1].num) / float(longitude.values[1].den)
 			s = float(longitude.values[2].num) / float(longitude.values[2].den)
 			exifLong = d + (m / 60.0) + (s / 3600.0)
-			if tags["GPS GPSLongitudeRef"].values[0] != "E":
+			if locExifData["gps gpslongituderef"].values[0] != "E":
 				exifLong = 0 - exifLong
 			location = "%f,%f" % (exifLat, exifLong)
-			request.session['exifData'] = {"location": location}
+			exifData['location'] = location
+			request.session['exifData'] = exifData
 			return HttpResponseRedirect('retrieve')
 	return render(request, 'app/upload.html', { 'user': request.user, },)
 
