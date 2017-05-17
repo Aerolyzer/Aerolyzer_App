@@ -120,6 +120,10 @@ fi
 # start Solr
 $INST_DIR/solr-5.5.4/bin/solr start
 
+# add aerolyzer core
+$INST_DIR/solr-5.5.4/bin/solr create -c aerolyzer
+$INST_DIR/solr-5.5.4/bin/solr restart
+
 # update Solr index every hr
 crontab -l > $INST_DIR/mycron
 echo "0 * * * * $APP/Aerolyzer/manage.py update_index" >> $INST_DIR/mycron
