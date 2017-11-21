@@ -61,6 +61,7 @@ if [ ! -z $APT_GET_CMD ]; then
   $APT_GET_CMD install postgresql postgresql-contrib
   $APT_GET_CMD install python-psycopg2
   $APT_GET_CMD install libpq-dev
+  $APT_GET_CMD install python-qt4 # Install PyQt4
 
   echo "configure PostgreSQL"
   # configure PostgreSQL
