@@ -161,7 +161,8 @@ def results(request):
  	exifData = request.session['exifData']
  	weatherData = request.session['wunderData']
  	# misrData = request.session['misrData']
- 	# aerosol = coreAlgorithmHere(exifData, wunderData, misrData)
+        aerodata = aerolyzer.AeroData()
+ 	aerosol = aerodata.aerolyzeImage(filename)
  	username = request.user.username
 	unique = str(int(time.time()))
  	solrFilename = username + "-" + unique + "_" + filename
@@ -172,7 +173,7 @@ def results(request):
  	        "exif": exifData,
  			#"misr": misrData,
  			"wunder": weatherData,
- 			#"results": aerosol,
+ 			"results": aerosol,
  			"username": username,
  	    },
  	])
